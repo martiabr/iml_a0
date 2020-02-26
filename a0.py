@@ -14,10 +14,11 @@ test.pop(0)
 # Init parameters:
 d = 10  # dimension of data points
 n = len(train)  # number of data points
-m = 100  # number of iterations
+m = 5  # number of iterations
 w = np.zeros(d)
 eta = 0.0000001  # learning rate
 
+# Do gradient descent:
 for i in range(m):
     grad = np.zeros(d)
     MSE = 0
@@ -33,3 +34,11 @@ for i in range(m):
     print("MSE i=", i, ":", MSE)
 
 print("Final w: ", w)
+
+# Predict y on test data:
+for vec in test:
+    temp = np.fromstring(vec, dtype=float, sep=',')
+    x_i = temp[1:d+1]
+    y_pred = np.dot(w, x_i)
+    print(y_pred)
+    # TODO: write y_pred's to output file
