@@ -1,5 +1,4 @@
 import numpy as np
-#from sklearn.metrics import mean_squared_error
 
 # Open data files:
 train = open("train.csv")
@@ -13,42 +12,24 @@ test = test.split("\n")
 test.pop(0)
 
 # Init parameters:
-d = 10
-n = len(train)
-w = np.ones(d)
-diff = 10
-threshold = 1
-eta = 0.5
+d = 10  # dimension of data points
+n = len(train)  # number of data points
+m = 100  # number of iterations
+w = np.zeros(d)
+eta = 0.0000001  # learning rate
 
-while diff > threshold:
+for i in range(m):
     grad = np.zeros(d)
+    MSE = 0
     for vec in train:
         temp = np.fromstring(vec, dtype=float, sep=',')
         y_i = temp[1]
         x_i = temp[2:d+2]
-        #print(y_i, np.dot(w, x_i))
-        res = y_i - np.dot(w, x_i)
-        print(res)
-        grad += res * x_i
-        #print(grad)
+        y_pred = np.dot(w, x_i)
+        res = y_i - y_pred
+        MSE += res**2 / n
+        grad -= 2 / n * res * x_i
+    w -= eta * grad
+    print("MSE i=", i, ":", MSE)
 
-    grad = 2*grad
-    #print(grad)
-    wold = w
-    w = w - eta*grad
-    diff = np.linalg.norm(w - wold)
-
-j = 0
-y_pred = np.zeros(n)
-y = np.zeros(n)
-
-for vec in train:
-    temp = np.fromstring(vec, dtype=float, sep=',')
-    y[j] = temp[1]
-    x_i = temp[2:d+2]
-    y_pred[j] = np.dot(w,x_i)
-    j = j + 1
-
-#RMSE = mean_squared_error(y, y_pred)**0.5
-
-
+print("Final w: ", w)
